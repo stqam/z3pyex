@@ -1,0 +1,11 @@
+(set-option :produce-proofs true)
+(declare-fun b () Int)
+(declare-fun c () Int)
+(declare-fun a () (Array Int Int))
+(declare-fun f (Int) Int)
+(assert (= (+ b 2) c))
+(assert (not (= (f (select (store a b 3) (- c 2))) (f (+ (- c b) 1)))))
+(check-sat)
+;(get-proof)
+;(exit)
+
