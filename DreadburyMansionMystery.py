@@ -56,13 +56,18 @@ s.add(e7)
 
 print s.sexpr()
 
-res = s.check()
+killer = None
+for z in [c, b, a]:
+    # checkpoint the solver
+    s.push()
+    # check whether asserted constraints imply (killed z a)
+    s.add(Not(killed(z, a)))
+    res = s.check()
+    # restore the solve to the last checkpoint
+    s.pop()
+    if res == unsat:
+        killer = z
+        break
 
-if res == sat:
-    model = s.model()
-    for z in [a, b, c]:
-        v = model.eval(killed(z, a))
-        if v.eq(BoolVal(True)):
-            print killed(z, a).sexpr()
-        elif v.eq(BoolVal(False)):
-            print Not(killed(z, a)).sexpr()
+if killer is not None:
+    print killed(killer, a).sexpr()
