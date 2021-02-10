@@ -1,48 +1,54 @@
-from z3 import *
+import sys
+
+from z3 import And, BitVec, Or, Solver, prove, solve
+
 
 def pprove(e):
-    print e
+    print(e)
     sys.stdin.readline()
     prove(e)
-    print ""
+    print("")
     sys.stdin.readline()
+
 
 def psolve(e):
-    print e
+    print(e)
     sys.stdin.readline()
     solve(e)
-    print ""
+    print("")
     sys.stdin.readline()
 
 
-x      = BitVec('x', 32)
-powers = [ 2**i for i in range(32) ]
-fast   = And(x != 0, x & (x - 1) == 0)
-slow   = Or([ x == p for p in powers ])
+x = BitVec("x", 32)
+powers = [2 ** i for i in range(32)]
+fast = And(x != 0, x & (x - 1) == 0)
+slow = Or([x == p for p in powers])
 
-print """
+print(
+    """
 x      = BitVec('x', 32)
 powers = [ 2**i for i in range(32) ]
 fast   = And(x != 0, x & (x - 1) == 0)
 slow   = Or([ x == p for p in powers ])
 """
+)
 sys.stdin.readline()
 
-print "prove(fast == slow)"
+print("prove(fast == slow)")
 sys.stdin.readline()
 
 pprove(fast == slow)
 
-print """buggy version...
+print(
+    """buggy version...
 fast   = x & (x - 1) == 0"""
+)
 
-fast   = x & (x - 1) == 0
+fast = x & (x - 1) == 0
 
 sys.stdin.readline()
-print "prove(fast == slow)"
+print("prove(fast == slow)")
 
 sys.stdin.readline()
 
 pprove(fast == slow)
-
-
