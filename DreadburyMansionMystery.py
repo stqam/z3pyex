@@ -1,4 +1,5 @@
-from z3 import *
+from z3 import (BoolSort, Const, Datatype, Exists, ForAll, Function, Implies,
+                Not, Solver, unsat)
 
 problem = """Someone who lived in Dreadbury Mansion killed Aunt Agatha. Agatha,
 the Butler and Charles were the only people who lived in Dreadbury
@@ -9,13 +10,13 @@ Aunt Agatha. The butler also hates everyone Agatha hates. No one hates
 everyone. Agatha is not the butler.  Who killed Aunt Agatha?
 """
 
-print problem
+print(problem)
 
 # declare finite data type mansion
-MansionDT = Datatype('Mansion')
-MansionDT.declare('Agatha')
-MansionDT.declare('Butler')
-MansionDT.declare('Charles')
+MansionDT = Datatype("Mansion")
+MansionDT.declare("Agatha")
+MansionDT.declare("Butler")
+MansionDT.declare("Charles")
 
 # create finite sort Mansion
 Mansion = MansionDT.create()
@@ -25,23 +26,23 @@ a, b, c = Mansion.Agatha, Mansion.Butler, Mansion.Charles
 
 
 # declare predicates
-killed = Function('killed', Mansion, Mansion, BoolSort())
-hates = Function('hates', Mansion, Mansion, BoolSort())
-richer = Function('richer', Mansion, Mansion, BoolSort())
+killed = Function("killed", Mansion, Mansion, BoolSort())
+hates = Function("hates", Mansion, Mansion, BoolSort())
+richer = Function("richer", Mansion, Mansion, BoolSort())
 
 # quantified variables
-x = Const('x', Mansion)
-y = Const('y', Mansion)
+x = Const("x", Mansion)
+y = Const("y", Mansion)
 
 e1 = Exists([x], killed(x, a))
-e2a = ForAll([x,y], Implies(killed(x,y), hates(x,y)))
-e2b = ForAll([x,y], Implies(killed(x,y), Not(richer (x,y))))
+e2a = ForAll([x, y], Implies(killed(x, y), hates(x, y)))
+e2b = ForAll([x, y], Implies(killed(x, y), Not(richer(x, y))))
 e3 = ForAll([x], Implies(hates(a, x), Not(hates(c, x))))
 e4a = hates(a, a)
 e4b = hates(a, c)
-e5 = ForAll([x], Implies(Not (richer(x,a)), hates(b, x)))
-e6 = ForAll([x], Implies(hates(a,x), hates(b,x)))
-e7 = ForAll([x], Exists ([y], Not(hates(x, y))))
+e5 = ForAll([x], Implies(Not(richer(x, a)), hates(b, x)))
+e6 = ForAll([x], Implies(hates(a, x), hates(b, x)))
+e7 = ForAll([x], Exists([y], Not(hates(x, y))))
 
 s = Solver()
 s.add(e1)
@@ -54,7 +55,7 @@ s.add(e5)
 s.add(e6)
 s.add(e7)
 
-print s.sexpr()
+print(s.sexpr())
 
 killer = None
 for z in [c, b, a]:
@@ -70,4 +71,4 @@ for z in [c, b, a]:
         break
 
 if killer is not None:
-    print killed(killer, a).sexpr()
+    print(killed(killer, a).sexpr())
